@@ -2,10 +2,11 @@ POST http://localhost:8080/v1/bets
 Content-Type: application/json
 
 {
-  "id": "a277d806-1a18-4371-8fc2-442e713c140a",
+  "id": "5927a22d-dec4-41a9-9be8-f7b6e7c48276",
   "jackpotId": "a277d806-1a18-4371-8fc2-442e713c140a",
   "userId": "a277d806-1a18-4371-8fc2-442e713c140a",
   "amount": 1000
 }
 
 ###
+GET http://localhost:8080/v1/bets/5927a22d-dec4-41a9-9be8-f7b6e7c48276

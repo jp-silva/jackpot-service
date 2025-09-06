@@ -59,18 +59,16 @@ public class BetController {
     }
 
     /**
-     * Retrieves a bet by its unique identifier.
-     * For demonstration purposes, this method returns a dummy bet.
+     * Retrieves a bet by its unique identifier from the database.
      *
      * @param betId The unique identifier of the bet to retrieve.
-     * @return A ResponseEntity containing the requested bet, or not found if the bet does not exist.
+     * @return A ResponseEntity containing the requested bet, or 404 Not Found if the bet does not exist.
      */
     @GetMapping("/{betId}")
     public ResponseEntity<Bet> getBet(@PathVariable UUID betId) {
         log.info("Attempting to retrieve bet with ID: {}", betId);
-        // In a real application, this would involve fetching the bet from a database.
-        // For now, we return a dummy bet.
-        Bet dummyBet = new Bet(betId, UUID.randomUUID(), UUID.randomUUID(), 100);
-        return ResponseEntity.ok(dummyBet);
+        return betService.getBetById(betId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
