@@ -36,9 +36,6 @@ public class AsyncBetService implements BetService {
      */
     @Override
     public void placeBet(Bet bet) {
-        BetEntity betEntity = new BetEntity(bet.id(), bet.userId(), bet.jackpotId(), bet.amount());
-        betRepository.save(betEntity);
-        log.info("Saved bet to database: {}", betEntity);
         kafkaTemplate.send(TOPIC_NAME, bet.jackpotId().toString(), bet);
         log.info("Published bet to Kafka topic '{}' with key '{}': {}", TOPIC_NAME, bet.jackpotId(), bet);
     }
