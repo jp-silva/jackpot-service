@@ -35,3 +35,10 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+tasks.register<JavaExec>("runLocallyWithTestContainers") {
+	group = "Execution"
+	description = "Run the main class with TestContainers using local profile"
+	classpath = sourceSets.test.get().runtimeClasspath
+	mainClass.set("com.example.jackpot_service.RunTestJackpotLocally")
+}
