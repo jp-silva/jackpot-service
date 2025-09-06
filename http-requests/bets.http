@@ -1,0 +1,11 @@
+POST http://localhost:8080/v1/bets
+Content-Type: application/json
+
+{
+  "id": "a277d806-1a18-4371-8fc2-442e713c140a",
+  "jackpotId": "a277d806-1a18-4371-8fc2-442e713c140a",
+  "userId": "a277d806-1a18-4371-8fc2-442e713c140a",
+  "amount": 1000
+}
+
+###

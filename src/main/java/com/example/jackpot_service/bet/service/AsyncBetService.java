@@ -10,19 +10,14 @@ import org.springframework.stereotype.Service;
  * Implementation of {@link BetService} that publishes bets to a Kafka topic.
  */
 @Service
-public class BetServiceImpl implements BetService {
+public class AsyncBetService implements BetService {
 
-    private static final Logger log = LoggerFactory.getLogger(BetServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(AsyncBetService.class);
     private static final String TOPIC_NAME = "jackpot-bets";
 
     private final KafkaTemplate<String, Bet> kafkaTemplate;
 
-    /**
-     * Constructs a new BetServiceImpl with the given KafkaTemplate and ObjectMapper.
-     *
-     * @param kafkaTemplate The KafkaTemplate used to send messages to Kafka.
-     */
-    public BetServiceImpl(KafkaTemplate<String, Bet> kafkaTemplate) {
+    public AsyncBetService(KafkaTemplate<String, Bet> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
