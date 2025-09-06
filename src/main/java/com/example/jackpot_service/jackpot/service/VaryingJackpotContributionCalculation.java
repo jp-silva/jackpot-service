@@ -29,9 +29,10 @@ public class VaryingJackpotContributionCalculation implements JackpotContribCalc
      * @return The calculated jackpot contribution.
      */
     @Override
-    public int calculateContribution(int betAmount, BigDecimal jackpotPoolAmount) {
+    public int calculateContribution(int betAmount, int poolAmount) {
         BigDecimal effectiveContributionPercentage;
         BigDecimal betAmountDecimal = BigDecimal.valueOf(betAmount);
+        BigDecimal jackpotPoolAmount = BigDecimal.valueOf(poolAmount);
 
         if (jackpotPoolAmount.compareTo(BigDecimal.ZERO) < 0) {
             // Handle negative jackpot pool amount, perhaps throw an exception or default to max

@@ -21,12 +21,12 @@ CREATE TABLE bets
 
 CREATE TABLE jackpot_contributions
 (
-    jackpot_id UUID NOT NULL,
-    bet_id UUID NOT NULL,
-    user_id                UUID NOT NULL,
-    stake_amount           INT  NOT NULL,
-    contribution_amount    INT  NOT NULL,
-    current_jackpot_amount INT  NOT NULL,
+    id                     UUID PRIMARY KEY,
+    jackpot_id             UUID                                NOT NULL,
+    bet_id                 UUID                                NOT NULL,
+    user_id                UUID                                NOT NULL,
+    contribution_amount    INT                                 NOT NULL,
+    current_jackpot_amount INT                                 NOT NULL,
     created_at             TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (bet_id) REFERENCES bets (id),
     FOREIGN KEY (jackpot_id) REFERENCES jackpots (id)

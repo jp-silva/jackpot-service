@@ -1,13 +1,18 @@
 package com.example.jackpot_service.jackpot.service;
 
 import com.example.jackpot_service.bet.model.Bet;
+import com.example.jackpot_service.common.JackpotProperties;
+import com.example.jackpot_service.jackpot.model.JackpotContributionEntity;
 import com.example.jackpot_service.jackpot.model.JackpotEntity;
+import com.example.jackpot_service.jackpot.repository.JackpotContributionRepository;
 import com.example.jackpot_service.jackpot.repository.JackpotRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -17,17 +22,21 @@ import java.util.UUID;
 public class JackpotContributionService {
 
     private final JackpotRepository jackpotRepository;
+    private final JackpotContributionRepository jackpotContributionRepository;
     private final List<JackpotContribCalculation> contribCalculationMethods;
+    private final JackpotProperties jackpotProperties;
 
     /**
      * Constructs a new JackpotContributionService with the given JackpotRepository and contribution calculation strategies.
      *
      * @param jackpotRepository                     The repository for accessing jackpot data.
      */
-    public JackpotContributionService(JackpotRepository jackpotRepository,
-                                      List<JackpotContribCalculation> contribCalculationMethods) {
+    public JackpotContributionService(JackpotRepository jackpotRepository, JackpotContributionRepository jackpotContributionRepository,
+                                      List<JackpotContribCalculation> contribCalculationMethods, JackpotProperties jackpotProperties) {
         this.jackpotRepository = jackpotRepository;
+        this.jackpotContributionRepository = jackpotContributionRepository;
         this.contribCalculationMethods = contribCalculationMethods;
+        this.jackpotProperties = jackpotProperties;
     }
 
     /**
@@ -47,11 +56,18 @@ public class JackpotContributionService {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("No contribution calculation method found for type: " + jackpotEntity.getContributionConfig()));
 
-        return jackpotContribCalculation.calculateContribution(betAmount, null);
+        return jackpotContribCalculation.calculateContribution(betAmount, getCurrentJackpotPoolAmount(jackpotId));
     }
 
-/*    public int storeContribution(Bet bet, int contribution) {
+    public void storeContribution(Bet bet, int contribution) {
+        int currentJackpotPoolAmount = getCurrentJackpotPoolAmount(bet.jackpotId());
 
-    }*/
+        jackpotContributionRepository.save(new JackpotContributionEntity(bet.jackpotId(), bet.id(), bet.userId(), contribution, currentJackpotPoolAmount + contribution,LocalDateTime.now()));
+    }
 
+    private int getCurrentJackpotPoolAmount(UUID jackpotId) {
+        return jackpotContributionRepository.findTopByJackpotIdOrderByCreatedAtDesc(jackpotId)
+                .map(JackpotContributionEntity::getCurrentJackpotAmount)
+                .orElse(jackpotProperties.getInitialPoolAmount());
+    }
 }

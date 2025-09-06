@@ -58,7 +58,7 @@ public class BetKafkaConsumer {
             log.info("Saved BetEntity to database: {}", betEntity);
 
             int contribution = jackpotContributionService.calculateContribution(betEntity.getJackpotId(), betEntity.getAmount());
-
+            jackpotContributionService.storeContribution(bet, contribution);
 
         } catch (Exception e) {
             log.error("Error saving BetEntity to database: {}", bet, e);

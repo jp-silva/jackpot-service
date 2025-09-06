@@ -22,7 +22,7 @@ public class FixedJackpotContributionCalculation implements JackpotContribCalcul
      * @return The calculated jackpot contribution, which is 1% of the bet amount.
      */
     @Override
-    public int calculateContribution(int betAmount, BigDecimal jackpotPoolAmount) {
+    public int calculateContribution(int betAmount, int jackpotPoolAmount) {
         return BigDecimal.valueOf(betAmount).multiply(FIXED_CONTRIBUTION_PERCENTAGE).setScale(0, RoundingMode.HALF_UP).intValue();
     }
 

@@ -2,6 +2,8 @@ package com.example.jackpot_service.bet.controller;
 
 import com.example.jackpot_service.TestcontainersConfiguration;
 import com.example.jackpot_service.bet.model.Bet;
+import com.example.jackpot_service.jackpot.model.JackpotContributionEntity;
+import com.example.jackpot_service.jackpot.repository.JackpotContributionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -37,6 +40,9 @@ class BetIntegrationTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private JackpotContributionRepository jackpotContributionRepository;
 
     /**
      * Tests the end-to-end process of placing a bet and then waiting for it to be available via the GET API.
@@ -74,6 +80,11 @@ class BetIntegrationTest {
                     Bet retrievedBet = objectMapper.readValue(responseContent, Bet.class);
 
                     assertThat(retrievedBet).isEqualTo(newBet);
+
+                    List<JackpotContributionEntity> contributions = jackpotContributionRepository.findAll();
+                    assertThat(contributions.size()).isEqualTo(1);
+                    assertThat(contributions.getFirst().getContributionAmount()).isEqualTo(1);
+                    assertThat(contributions.getFirst().getCurrentJackpotAmount()).isEqualTo(1000001);
                 });
     }
 }

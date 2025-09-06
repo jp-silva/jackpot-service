@@ -31,3 +31,5 @@ spring:
       auto-offset-reset: earliest # This ensures consumption from the beginning if the group is new
       properties:
         spring.json.trusted.packages: "*"
+jackpot:
+  initial-pool-amount: 1000000

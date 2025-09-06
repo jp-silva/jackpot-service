@@ -14,7 +14,7 @@ public interface JackpotContribCalculation {
      * @param jackpotPoolAmount The current total amount in the jackpot pool.
      * @return The calculated jackpot contribution.
      */
-    int calculateContribution(int betAmount, BigDecimal jackpotPoolAmount);
+    int calculateContribution(int betAmount, int jackpotPoolAmount);
 
     String type();
 }
