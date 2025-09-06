@@ -5,8 +5,8 @@ CREATE TABLE jackpots
     rewards_config      VARCHAR(255) NOT NULL
 );
 INSERT INTO jackpots (id, contribution_config, rewards_config)
-VALUES ('a277d806-1a18-4371-8fc2-442e713c140a', 'configA', 'rewardA'),
-       ('9cca1449-a55e-41b7-85f5-40321c24f413', 'configB', 'rewardB');
+VALUES ('a277d806-1a18-4371-8fc2-442e713c140a', 'FIXED_PERCENTAGE', 'rewardA'),
+       ('9cca1449-a55e-41b7-85f5-40321c24f413', 'VARYING_PERCENTAGE', 'rewardB');
 
 
 

@@ -1,10 +1,12 @@
 package com.example.jackpot_service.jackpot.service;
 
+import com.example.jackpot_service.bet.model.Bet;
 import com.example.jackpot_service.jackpot.model.JackpotEntity;
 import com.example.jackpot_service.jackpot.repository.JackpotRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -15,14 +17,17 @@ import java.util.UUID;
 public class JackpotContributionService {
 
     private final JackpotRepository jackpotRepository;
+    private final List<JackpotContribCalculation> contribCalculationMethods;
 
     /**
-     * Constructs a new JackpotContributionService with the given JackpotRepository.
+     * Constructs a new JackpotContributionService with the given JackpotRepository and contribution calculation strategies.
      *
-     * @param jackpotRepository The repository for accessing jackpot data.
+     * @param jackpotRepository                     The repository for accessing jackpot data.
      */
-    public JackpotContributionService(JackpotRepository jackpotRepository) {
+    public JackpotContributionService(JackpotRepository jackpotRepository,
+                                      List<JackpotContribCalculation> contribCalculationMethods) {
         this.jackpotRepository = jackpotRepository;
+        this.contribCalculationMethods = contribCalculationMethods;
     }
 
     /**
@@ -33,12 +38,20 @@ public class JackpotContributionService {
      * @return The calculated contribution amount.
      * @throws NoSuchElementException if the jackpot with the given ID is not found.
      */
-    public BigDecimal calculateContribution(UUID jackpotId, BigDecimal betAmount) {
+    public int calculateContribution(UUID jackpotId, int betAmount) {
         JackpotEntity jackpotEntity = jackpotRepository.findById(jackpotId)
                 .orElseThrow(() -> new NoSuchElementException("Jackpot not found with ID: " + jackpotId));
 
-        // TODO: Implement the actual contribution calculation logic based on the jackpot's contributionConfig
-        // For now, returning a placeholder or a simple calculation.
-        return BigDecimal.ZERO; // Placeholder
+
+        JackpotContribCalculation jackpotContribCalculation = contribCalculationMethods.stream().filter(cm -> jackpotEntity.getContributionConfig().equals(cm.type()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No contribution calculation method found for type: " + jackpotEntity.getContributionConfig()));
+
+        return jackpotContribCalculation.calculateContribution(betAmount, null);
     }
+
+/*    public int storeContribution(Bet bet, int contribution) {
+
+    }*/
+
 }

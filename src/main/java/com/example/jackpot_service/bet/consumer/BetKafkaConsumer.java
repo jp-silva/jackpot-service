@@ -3,6 +3,7 @@ package com.example.jackpot_service.bet.consumer;
 import com.example.jackpot_service.bet.model.Bet;
 import com.example.jackpot_service.bet.model.BetEntity;
 import com.example.jackpot_service.bet.repository.BetRepository;
+import com.example.jackpot_service.jackpot.service.JackpotContributionService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,14 +22,16 @@ public class BetKafkaConsumer {
     private static final String CONSUMER_GROUP_ID = "jackpot-bet-consumer-group";
 
     private final BetRepository betRepository;
+    private final JackpotContributionService jackpotContributionService;
 
     /**
      * Constructs a new BetKafkaConsumer with the given BetRepository.
      *
      * @param betRepository The repository used to save Bet entities to the database.
      */
-    public BetKafkaConsumer(BetRepository betRepository) {
+    public BetKafkaConsumer(BetRepository betRepository, JackpotContributionService jackpotContributionService) {
         this.betRepository = betRepository;
+        this.jackpotContributionService = jackpotContributionService;
     }
 
     /**
@@ -53,6 +56,10 @@ public class BetKafkaConsumer {
             BetEntity betEntity = new BetEntity(bet.id(), bet.userId(), bet.jackpotId(), bet.amount());
             betRepository.save(betEntity);
             log.info("Saved BetEntity to database: {}", betEntity);
+
+            int contribution = jackpotContributionService.calculateContribution(betEntity.getJackpotId(), betEntity.getAmount());
+
+
         } catch (Exception e) {
             log.error("Error saving BetEntity to database: {}", bet, e);
         }
